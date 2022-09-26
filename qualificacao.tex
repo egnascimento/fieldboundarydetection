@@ -105,7 +105,7 @@
 
 \section*{Summary}
 
-As the world population exponentially grows, the motivation to ensure enough food for everyone has brought a diversity of technologies from other industries to agriculture. The main challenge is producing more food with fewer resources using a collection of techniques known as precision agriculture. In precision agriculture, drawing crop field boundaries is an essential practice, and it allows the farmer to evaluate operating performance separately and compare different seed varieties, pesticides, and fertilizers. However, manually drawing field boundaries is often a deep time-consuming task. In this context, we propose a method to detect crop fields automatically and infer their boundaries by applying contrastive learning, an approach that achieves comparable performance to supervised deep learning methods but without requiring a massive amount of labeled samples.
+As the world population exponentially grows, the motivation to ensure enough food for everyone has brought a diversity of technologies from other industries to agriculture. The main challenge is producing more food with fewer resources using a collection of techniques known as precision agriculture. In precision agriculture, drawing crop field boundaries is an essential practice, and it allows the farmer to evaluate operating performance separately and compare different seed varieties, pesticides, and fertilizers. However, manually drawing field boundaries is often a deep time-consuming task. In this context, we propose a method to detect crop fields automatically and infer their boundaries by applying \add{graph-based segmentation combined with} contrastive learning, an approach that achieves comparable performance to supervised deep learning methods but without requiring a massive amount of labeled samples.
 
 \section{Introduction}\label{section:introduction}
 
@@ -120,14 +120,12 @@ In order to efficiently organize and manage large crops, farmers leverage remote
 Usually, farmers rely on experts to build the field boundaries in a dedicated Geographic Information Systems (GIS) software (e.g., QGIS\footnote{QGIS -- a free and open source geographic information system. Available at: \url{https://qgis.org/en/site/}. Access on July 10, 2022.}). Despite the expert's ability and knowledge, drawing the boundaries of agricultural plots has been a major, error-prone, and time-consuming challenge~\cite{wagner2020}. The larger the customer's land is, the more significant the number of fields to be created. According to the marketing department at John Deere\footnote{We have obtained this information directly from the John Deere employees in June 2022}, there are farms in Brazil with more than eighteen thousand fields that require regular updates to reflect their accurate states. 
 
 In Figure~\ref{figure:fieldanalyzer}, a field analyzer software demonstrates the variability inside a crop field. The areas of the field are colored with gradients from green to red, proportional to the productivity. For example, areas in red had the lowest productivity, while areas in green had the highest. This information helps farmers understand how to improve their operations by comparing this data with seed varieties, fertilizers, and machine operations. These are some of the motivations behind the delineation of field boundaries: define the area for evaluating supplies, machines, and techniques to improve crop productivity.
-% and how it is crucial to understand how we can improve it in further applications.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[height=8cm]{Projeto de Qualificação - Eduardo/res/field-analyzer.png}
 \caption{\label{figure:fieldanalyzer}Agriculture field analyzer\protect\footnotemark}
 \end{figure}
-
 \footnotetext{Field analyzer. Available at: \url{http://salesmanual.deere.com/sales/salesmanual/en_NA/ams/2017/feature/wdt_field_analyzer.html}. Access on July 10, 2022.}
 
 % Session 3.2: Suggest doing it automatically and talk about the challenges
@@ -136,13 +134,8 @@ Given a map provided by remote sensing techniques, a method to automatically det
 Fortunately, some automatic and semi-automatic methods have been proposed to outline the boundaries of agricultural fields. Edge-based approaches detect boundaries with reasonably good accuracy however fail when forming closed polygons~\cite{taravat2021,waldner2021}. Region-based methods are more successful when producing closed polygons, but often do not place boundaries at the visible edges~\cite{taravat2021}. There is a significant increase in efficiency in hybrid methods where both edge and region approaches are combined~\cite{garcia2017}. However, both methods and combinations have not been successful in images with high within-field variance~\cite{mueller2004,zhang2021}.
 
 Deep learning-based approaches are the current state-of-the-art when dealing with these challenges~\citep{waldner2021,zhang2021}. However, they require massive sets of labeled samples often unavailable in real-case scenarios~\cite{kokkinos2016, ma2019,kamilaris2018}. 
-
-
 % Briefly explain the proposal
-%To overcome this limitation, we propose applying contrastive learning, a method capable of achieving deep learning equivalent results requiring a limited amount of labeled data. Although contrastive learning on agricultural images has been explored successfully~\cite{guldenring2021,jansel2021}, this work proposes, in an unprecedented way, leveraging similar approaches for the automatic detection of agricultural fields. We hypothesize that applying a self-supervised or semi-supervised method should overcome the limitations of obtaining sufficient training data~\citep{yang2020}. Moreover, requiring a smaller amount of labeled samples gives us better control over its quality. \add{And while this work proposes contrastive learning to detect similarity of connected pixels, the delineation of crop fields is implemented using graph-based segmentation~\citep{felzenszwalb2004}, an approach where components of an image are connected by an edge whose weight is proportional to the similarity between them.}
-
-\add{To overcome this limitation, we propose applying contrastive learning to detect the similarity of connected pixels to delineate crop fields using graph-based segmentation, i.e., components of an image are connected by an edge whose weight is proportional to the similarity between them~\citep{felzenszwalb2004}. Contrastive learning is a method capable of achieving deep learning equivalent results requiring a limited amount of labeled data. Although it has been successfully applied to agricultural images~\cite{guldenring2021,jansel2021}, this work proposes, in an unprecedented way, leveraging similar approaches for the automatic detection of agricultural fields. We hypothesize that using a self-supervised or semi-supervised method should overcome the limitations of obtaining sufficient training data~\citep{yang2020}. Additionally, requiring a smaller amount of labeled samples gives us better control over its quality.}
-
+To overcome this limitation, we propose applying contrastive learning to detect the similarity of connected pixels to delineate crop fields using graph-based segmentation, i.e., components of an image are connected by an edge whose weight is proportional to the similarity between them~\citep{felzenszwalb2004}. Contrastive learning is a method capable of achieving deep learning equivalent results requiring a limited amount of labeled data. Although it has been successfully applied to agricultural images~\cite{guldenring2021,jansel2021}, this work proposes, in an unprecedented way, leveraging similar approaches for the automatic detection of agricultural fields. We hypothesize that using a self-supervised or semi-supervised method should overcome the limitations of obtaining sufficient training data~\citep{yang2020}. Additionally, requiring a smaller amount of labeled samples gives us better control over its quality.
 
 The remainder of this project is organized as follows. In Section~\ref{section:bibliografia}, we present the main related work. The hypothesis and main objectives are described in Section~\ref{section:objetivos}. Section~\ref{section:constrastive-learning} describes the contrastive learning approach. In Section~\ref{section:materiais}, we detail the materials and methods required for the whole development of this project. Finally, the work plan is presented in Section~\ref{section:planotrabalho}.
 
@@ -162,10 +155,17 @@ Since computer vision alone is often not enough to achieve good results, further
 Concurrently, \citet{persello2019} designed a deep learning approach using SegNet, a convolutional network architecture commonly used for semantic segmentation in Very High Resolution (VHR) images. In SegNet, only the pooling indices are transferred to the expansion path from the compression path using less memory. In contrast, in UNet, entire feature maps are transferred from compression path to expansion path, demanding much more memory. Both techniques attained remarkable performance. However, some significant mistakes were generally associated with poor-quality training data~\citep{persello2019}. As deep learning requires a tremendous amount of training data, it is difficult to assure its quality. The authors extend their work on medium-resolution images from Sentinel-2, using two different deep learning architectures, SRC-Net and MD-FCN. Again, they observed a severe limitation during training since these methods comprised many convolutional layers resulting in a time-consuming task~\cite{persello2019,masoud2020}.
 
 % Edge-based that was later improved with deep learning from Kiel University, Germany
-Another option explored by~\citet{wagner2020} is a modified version of the growing snakes active contour model~\cite{wagner2020}. This technique can extract complex networks of boundaries present in agricultural landscapes requiring little supervision. Evaluated on rural area maps, it detected 99\% of total acreage, but it achieved a poor performance close to urban areas. In sequence, \citet{wagner2020.2} integrated a deep learning technique into this approach. For this, a fully connected MLP-NN was used to make a pixel-wise prediction of whether it was a boundary. The method achieved excellent results in rural areas but required further investigation of the missed boundaries, especially in areas closer to the cities~\cite{wagner2020.2,wagner2020}.
+Another option \add{is} explored by~\citet{wagner2020} \replace{is}{, designing} a modified version of the growing snakes active contour model \add{with graph theory concepts}~\cite{wagner2020}. This technique\add{, referred as graph-based growing contour,} can extract complex networks of boundaries present in agricultural landscapes requiring little supervision. Evaluated on rural area maps, it detected 99\% of total acreage, but it achieved a poor performance close to urban areas. In sequence, \citet{wagner2020.2} integrated a deep learning technique into \replace{this approach}{their already proven graph-based model}. For this, a fully connected MLP-NN was used to make a pixel-wise prediction of whether it was a boundary. The method achieved excellent results in rural areas but required further investigation of the missed boundaries, especially in areas closer to the cities~\cite{wagner2020.2,wagner2020}.
+
+\add{Another approach employing graph theory was led by~\citet{alshehhi2017}. It applies graph-based segmentation focused in roads detection, however, agricultural fields can be implied depending on the scenario. There is limited diversity of road patterns which is one of the reasons why this work falls short on addressing the challenge of field detection. It is also suggested in this paper the need of a more efficient algorithm because the combination of sequential merging and splitting methods and Dijkstra require additional computations depending on the image~\citep{alshehhi2017}.}
 
 % Deep learning work from the European Commission Join Research Center
-\citet{waldner2020} evaluated different deep learning methods starting with \mbox{ResUnet-a} and followed by an improvement named Fractal-ResUNet, a network designed for the task of semantic segmentation of agricultural images. The experiments achieved the best accuracies with Sentinel-2 images, and it is considered today the state-of-the-art in boundary detection of agricultural fields. However, it strongly depends on a large amount of training data with high-quality labeling to achieve consistent results~\cite{waldner2020,waldner2021}.
+\citet{waldner2020} evaluated different deep learning methods starting with \mbox{ResUnet-a} and followed by an improvement named Fractal-ResUNet, a network designed for the task of semantic segmentation of agricultural images. \add{It employed hierarchical watershed segmentation, a technique that also relies on graph theory, suggesting this as a successful approach to address the image segmentation challenge of crop fields}. The experiments achieved the best accuracies with Sentinel-2 images, and it is considered today the state-of-the-art in boundary detection of agricultural fields. However, it strongly depends on a large amount of training data with high-quality labeling to achieve consistent results~\cite{waldner2020,waldner2021}.
+
+% In the last paragraph I emphasize 2 important things:
+% 1. Graph-theory is a trend in the latest successful research, including the state-of-the-art.
+% 2. The challenge of working with limited samples still remains unsolved.
+% With these two important points, I finish the bibliographic review with what could represent a meaningful contribution and it is also what this work suggests.
 
 % Start reviewing contrastive learning to be more specific on the method
 It has been continuously observed that, in deep learning methods, data availability is usually a limitation. This challenge motivates a different approach with less dependency on large amounts of data. Latest advances in the area suggest self-supervised and semi-supervised methods, more precisely, using contrastive learning as a promising alternative~\cite{guldenring2021}. %In that sense, this work proposes the evaluation, in an unprecedented way, of contrastive learning for detecting crop fields in scenarios with scarce labeled data.
@@ -231,40 +231,46 @@ Based on the recent advances and successful implementations, \citet{saunshi2022}
 
 Given the recent remarkable results presented by contrastive learning, with some of them compared to supervised methods, we expect that it will also perform satisfactorily when applied to detect crop fields with just a few labeled samples. This has the potential to overcome the well-known limitations of supervised deep learning-based approaches and, therefore, enable its application in real-world scenarios. Moreover, to the best of our knowledge, no similar studies investigate contrastive learning methods to detect crop fields in satellite images.
 
-%Our hypothesis is that state-of-the-art methods with self-supervised learning are capable of automatically detecting field boundaries requiring a reduced amount of labeled data with good quality. Therefore, contrarily to deep learning, its application in real scenarios is feasible.
 We hypothesize that state-of-the-art methods with contrastive learning can be combined with graph-based segmentation to automatically detect crop fields requiring a reduced amount of high-quality labeled data, consequently allowing their application in real scenarios.
 
-Finally, the main objective of this project is to evaluate if contrastive learning combined with graph-based segmentation is a promising alternative to established deep learning models, able to detect crop fields automatically but requiring few labeled training samples. %Therefore, our main objective is to train a model capable of classify unforeseen images from remote sensing whose pixels should be labeled as ``crop field'' or ``not a crop field''.
-
-
-
-
-
-%The objective of this research project is to evaluate the results of employing a state-of-the-art self-supervised method to automatically detect border of crop fields without the need of large amounts of labeled training samples. In that sense, contrastive learning is a promising alternative that has recently demonstrated excellent results, some of them compared to deep learning methods. %Informar que vai usar contrastive learning.
-%The main objective of this project is to evaluate if contrastive learning combined with graph-based segmentation is a promising alternative to established deep learning models, able to automatically detect crop fields but requiring few labeled training samples. Therefore, our objective is to train a model capable of classify unforeseen images from remote sensing whose pixels should be labeled as ``crop field'' or ``not a crop field''. %In that sense, we aim to confirm if contrastive learning can be a promising alternative to deep learning methods.
+Finally, the main objective of this project is to evaluate if contrastive learning combined with graph-based segmentation is a promising alternative to established deep learning models, able to detect crop fields automatically but requiring few labeled training samples. 
 
 % PROPOSTA
-%\section{Crop field detection using contrastive learning and graph-based segmentation}\label{section:constrastive-learning}
+\add{
 \section{Proposal}\label{section:proposal}
-
-
-COLOCAR O DIAGRAMA VALIDADO PELO JOHN QUE MOSTRA UM OVERVIEW DO PROCESSO TODO. EM SEGUIDA, EXPLICAR CADA PASSO DO DIAGRAMA.
-
+The implementation proposed can be divided in three steps: data processing, contrastive learning model training and graph-based segmentation.
+\subsection{Data Processing}\label{subsection:dataprocessing}
+In order to get the dataset ready for training, the first step is to collect the multi-temporal Sentinel-2 imagery and combine with machine information. It is from the machine information we know where typical agricultural operations such as tillage, spraying and harvesting were executed therefore it is possible to infer crop field areas or positive samples. 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=17cm]{Projeto de Qualificação - Eduardo/res/dataprocessing.png}
+\caption{\label{figure:data_processing}Data Processing}
+\end{figure}
+The negative samples are the areas not worked by machines, moreover, we should select for negative samples the closest points to the inferred crop fields to maximize the dissimilarity with the positive samples contributing to the algorithm efficiency. We plan to work with these points grouping pixels as hexagons seeking for regular grids with smooth gradients and equidistant neighbors. In addition, working with hexagons rather than individual pixels should improve the speed during the next step, the contrastive learning model training.
+\subsection{Contrastive Learning Model Training}\label{subsection:cltraining}
 % Describe how we plan the implementation
-Once images and their respective labels are properly organized in the dataset, we train the model using \add{contrastive learning. The similarity of the output vectors $\tilde{\boldsymbol{z}_i}$ will be measured using cosine similarity followed by the calculation of the probability of samples to be part of the same class using softmax represented in the Equation ~\ref{eqn:softmax}.
+Once images and their respective labels are properly organized in the dataset, we train the model using contrastive learning. The Figure~\ref{figure:contrastive_training} demonstrates the contrastive learning training pipeline for this project.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=17cm]{Projeto de Qualificação - Eduardo/res/clmodeltraining.png}
+\caption{\label{figure:contrastive_training}Contrastive Learning Model Training}
+\end{figure}
+Little perturbation will be applied to original data in order to produce augmented data $\tilde{\boldsymbol{x}_i}$. The augmented pairs are encoded to $\tilde{\boldsymbol{h}_i}$ by a convolutional neural network and its output processed by a projection head to generate $\tilde{\boldsymbol{z}_i}$.  The similarity of the output vectors $\tilde{\boldsymbol{z}_i}$ will be measured using cosine similarity followed by the calculation of the probability of samples to be part of the same class applying softmax represented in the Equation ~\ref{eqn:softmax}.
 \begin{equation}
-softmax=\frac{\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_j\right)}}{\sum_{k=1}^{2N}\mathbf{1}_{i\neq k}\cdot\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_k\right)}}
+softmax=\frac{\exp{\left(sim(\boldsymbol{z}_i\cdot\boldsymbol{z}_j)/\tau\right)}}{\sum_{k=1}^{2N}\mathbf{1}_{i\neq k}\cdot\exp{\left(sim(\boldsymbol{z}_i\cdot\boldsymbol{z}_k)/\tau\right)}}
 \label{eqn:softmax}
 \end{equation}
-This information will be used to create a graph where the nodes are the pixels and the edge weights are the probability of the two connected nodes to be part of the same class. Graph-based~\citep{felzenszwalb2004} segmentation will be used to distinguish field and non-field pixels in the map using graph cuts~\citep{veksler2001}. The lowest probabilities identify the field boundary or the line that separates two different groups of classes.
+These probabilities are proportional to the likelihood of two neighbor samples to be part of the same class and will support the graph-based segmentation discussed in the next section.
+\subsection{Graph-based Segmentation}\label{subsection:graphbasedsegmentation}
+The probabilities calculated in the previous section are integrated to the graph-based segmentation~\citep{felzenszwalb2004} to create a graph where the nodes are the pixels and the edge weights are the likelihood of the two connected nodes to be part of the same class. Graph-based segmentation will be used to distinguish field and non-field pixels in the map using graph cuts~\citep{veksler2001}. The lowest probabilities identify the field boundary or the line that separates two different groups of classes
 as it is highlighted in bold red in Figure~\ref{figure:hexgraph}.
 \begin{figure}[ht]
 \centering
-\includegraphics[height=6cm]{Projeto de Qualificação - Eduardo/res/hexgraph.png}
-\caption{\label{figure:hexgraph}Graph-based segmentation with contrastive learning probabilities\protect}
+\includegraphics[width=11cm]{Projeto de Qualificação - Eduardo/res/hexgraph.png}
+\caption{\label{figure:hexgraph}Graph-based segmentation with similarity probabilities\protect}
 \end{figure}
-This technique can be applied to either groups of hexes or pixels depending on the required precision and speed of the application}.
-
+This technique can be applied to either groups of hexes or pixels depending on the required precision and speed of the application.
+}
 
 \section{Materials and methods}\label{section:materiais}
 
@@ -274,23 +280,9 @@ The remote sensing images used in this project are extracted from Sentinel-2 sat
 % Describe next how we are planning to get labels
 A minimal amount of labeled data will be collected from a real database after data is appropriately anonymized. John Deere will provide this data in which the crop field boundaries are manually drawn by human specialists and may differ in quality. During the evaluation of the results, if we observe that poor quality label impacts the results, we can also estimate crop boundaries from machine operation data, assuming that these machines worked to the exact extents of the crop field.
 
-% Describe how we plan the implementation
-Once remote sensing images and their respective labels are properly organized in the dataset, we train the model using \add{contrastive learning. The similarity of the output vectors $\tilde{\boldsymbol{z}_i}$ will be measured using cosine similarity followed by the calculation of the probability of samples to be part of the same class using softmax represented in the Equation ~\ref{eqn:softmax}.
-\begin{equation}
-softmax=\frac{\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_j\right)}}{\sum_{k=1}^{2N}\mathbf{1}_{i\neq k}\cdot\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_k\right)}}
-\label{eqn:softmax}
-\end{equation}
-This information will be used to create a graph where the nodes are the pixels and the edge weights are the probability of the two connected nodes to be part of the same class. Graph-based~\citep{felzenszwalb2004} segmentation will be used to distinguish field and non-field pixels in the map using graph cuts~\citep{veksler2001}. The lowest probabilities identify the field boundary or the line that separates two different groups of classes.
-as it is highlighted in bold red in Figure~\ref{figure:hexgraph}.
-\begin{figure}[ht]
-\centering
-\includegraphics[height=6cm]{Projeto de Qualificação - Eduardo/res/hexgraph.png}
-\caption{\label{figure:hexgraph}Graph-based segmentation with contrastive learning probabilities\protect}
-\end{figure}
-This technique can be applied to either groups of hexes or pixels depending on the required precision and speed of the application}.
- 
+\add{The pixels clustering in hexagons will be implemented with H3\footnote{H3 - Hexagonal hierarchical geospatial indexing system. Available at: \url{https://h3geo.org/}. Access on September 24, 2022.
+} library support, a geospatial indexing system developed by Uber.} 
 
-% e comparar os resultados com o método da artes
 
 % Describe metrics
 To validate the results, we plan to follow the metrics traditionally used by state-of-the-art supervised methods. They refer to field boundary detection, however, there is a intimate connection with crop detection, since by finding a crop field we can easily infer its boundaries. These metrics are often divided into thematic and geometric accuracies.
