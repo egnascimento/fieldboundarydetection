@@ -1,0 +1,79 @@
+\usetheme{Rochester}
+
+\RequirePackage{pgf}
+
+\pgfdeclareimage[width=1.0\paperwidth]{oxygen-header}{ufscar-header}
+
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercovered{invisible}
+
+\beamer@headheight=0.13\paperwidth
+
+\definecolor{oxygenorange}{HTML}{F7800A}
+\definecolor{oxygengray}{HTML}{686868}
+\definecolor{oxygenlightgray}{HTML}{EEEEEE}
+\definecolor{oxygenblue}{HTML}{236EAF}
+\definecolor{oxygengreen}{HTML}{006633}
+
+\setbeamercolor*{Title bar}{fg=white}
+\setbeamercolor*{Location bar}{fg=black,bg=oxygenlightgray}
+\setbeamercolor*{frametitle}{parent=Title bar}
+\setbeamercolor*{block title}{bg=black,fg=white}
+\setbeamercolor*{block body}{bg=oxygenlightgray,fg=oxygengray}
+%\setbeamercolor*{normal text}{bg=white,fg=oxygengray}
+\setbeamercolor*{normal text}{bg=white,fg=black}
+\setbeamercolor*{section in head/foot}{bg=black,fg=white}
+
+\setbeamercolor{example text}{fg=blue!50!black}
+\setbeamercolor{block body example}{}
+\setbeamercolor{block title example}{parent=example text}
+
+
+% \setbeamercolor{block title example}{bg=blue}
+% \setbeamercolor{block body example}{bg=blue!10}
+% \setbeamercolor{block text example}{fg=blue!50!black}
+
+\usecolortheme[named=black]{structure}
+
+\setbeamerfont{section in head/foot}{size=\tiny,series=\normalfont}
+\setbeamerfont{frametitle}{size=\Large}
+
+%\setbeamertemplate{headline}
+\setbeamertemplate{frametitle}
+{
+  \vskip-0.25\beamer@headheight
+  \vskip-\baselineskip
+%  \vskip-0.1cm
+  \hskip+0.5cm\usebeamerfont*{frametitle}\insertframetitle
+  \vskip-0.10em
+  \hskip+0.5cm\usebeamerfont*{framesubtitle}\insertframesubtitle
+}
+
+\setbeamertemplate{headline}
+{
+  \pgfuseimage{oxygen-header}
+  \vskip -1.95cm
+  \linethickness{0pt}
+
+  \framelatex{
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.3\beamer@headheight]{Title bar}
+    \usebeamerfont{section in head/foot}%
+    \insertsectionnavigationhorizontal{0pt}{\hskip0.22cm}{}%
+  \end{beamercolorbox}}
+
+  \framelatex{
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.7\beamer@headheight]{Title bar}
+  \end{beamercolorbox}}
+}
+
+\setbeamertemplate{footline}
+{
+  \linethickness{0pt}
+  \framelatex{
+  \begin{beamercolorbox}[leftskip=.3cm,wd=\paperwidth,ht=0.3\beamer@headheight,sep=0.1cm]{Location bar}
+    \usebeamerfont{section in head/foot}%
+    \insertshortauthor
+    \hfill
+    \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}
+}

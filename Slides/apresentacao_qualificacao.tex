@@ -1,0 +1,557 @@
+\documentclass[xcolor=table]{beamer}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath}
+\usepackage{array}
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}} %usado para esconder uma coluna na tabela
+\usepackage[most]{tcolorbox}
+\usepackage{ulem}
+\usepackage{fancybox}%caixas de texto
+\usepackage{xcolor}%caixas de texto
+\usetheme{Ufscar}
+\useinnertheme{rounded}
+\setbeamertemplate{navigation symbols}{} %tira os símbolos de navegaçao dos slides
+\setbeamertemplate{}[page number] %contador de slides
+\setbeamersize{text margin left=0.30cm,text margin right=0.30cm}
+\setbeamertemplate{frametitle continuation}{} %para de enumerar os slides que tem [allowframebreaks]
+
+\usepackage{epsfig,psfrag}
+\usepackage{epsfig,graphicx}
+
+\usepackage{subcaption}
+
+\usepackage{longtable}
+
+\usepackage{tabularx} %usado para ajustar a largura da tabela na página
+\usepackage{ltablex} % usa tabularx de forma similar ao longtable
+
+\usepackage[Algoritmo]{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx %use [noend] para não aparecer escrito "end funtion"
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Configuração do pacote algpseudocode para português
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Declaracoes em Português
+%\algrenewcommand\algorithmicend{\textbf{fim}}
+%\algrenewcommand\algorithmicdo{\textbf{faça}}
+%\algrenewcommand\algorithmicwhile{\textbf{enquanto}}
+%\algrenewcommand\algorithmicfor{\textbf{para}}
+%\algrenewcommand\algorithmicif{\textbf{se}}
+%\algrenewcommand\algorithmicthen{\textbf{então}}
+%\algrenewcommand\algorithmicelse{\textbf{senão}}
+%\algrenewcommand\algorithmicreturn{\textbf{retorna}}
+%\algrenewcommand\algorithmicfunction{\textbf{função}}
+%
+%% Rearranja os finais de cada estrutura
+%\algrenewtext{EndWhile}{\algorithmicend\ \algorithmicwhile}
+%\algrenewtext{EndFor}{\algorithmicend\ \algorithmicfor}
+%\algrenewtext{EndIf}{\algorithmicend\ \algorithmicif}
+%\algrenewtext{EndFunction}{\algorithmicend\ \algorithmicfunction}
+%
+%% O comando For, a seguir, retorna 'para #1 -- #2 até #3 faça'
+%%\algnewcommand\algorithmicto{\textbf{até}}
+%%\algrenewtext{For}[3]%
+%%{\algorithmicfor\ #1 $\gets$ #2 \algorithmicto\ #3 \algorithmicdo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%#############################################################33
+%Terceiro Caption para longtable
+\usepackage{forloop,longtable}
+\newcounter{count}
+\setcounter{count}{1}
+\makeatletter
+\newbox\LT@secondhead
+\def\endsecondhead{\LT@end@hd@ft\LT@secondhead}
+\def\LT@output{%
+	\ifnum\outputpenalty <-\@Mi
+	\ifnum\outputpenalty > -\LT@end@pen
+	\LT@err{floats and marginpars not allowed in a longtable}\@ehc
+	\else
+	\setbox\z@\vbox{\unvbox\@cclv}%
+	\ifdim \ht\LT@lastfoot>\ht\LT@foot
+	\dimen@\pagegoal
+	\advance\dimen@-\ht\LT@lastfoot
+	\ifdim\dimen@<\ht\z@
+	\setbox\@cclv\vbox{\unvbox\z@\copy\LT@foot\vss}%
+	\@makecol
+	\@outputpage
+	\ifvoid\LT@secondhead
+	\setbox\z@\vbox{\box\LT@head}%
+	\else
+	\setbox\z@\vbox{\box\LT@secondhead}%
+	\fi
+	\fi
+	\fi
+	\global\@colroom\@colht
+	\global\vsize\@colht
+	\vbox
+	{\unvbox\z@\box\ifvoid\LT@lastfoot\LT@foot\else\LT@lastfoot\fi}%
+	\fi
+	\else
+	\setbox\@cclv\vbox{\unvbox\@cclv\copy\LT@foot\vss}%
+	\@makecol
+	\@outputpage
+	\global\vsize\@colroom
+	\ifvoid\LT@secondhead
+	\copy\LT@head\nobreak
+	\else
+	\box\LT@secondhead\nobreak
+	\fi
+	\fi}
+\makeatother
+%Fim: Terceiro Caption para longtable
+%############################################################################################
+
+\title[Exame de Qualificação]{Contrastive Learning for Automatic Field Boundary Detection}
+\author[PPGCCS -- UFSCar]{Marciele de Menezes Bittencourt,Co-Orientador: Dr. Renato Moraes Silva, Orientador: Prof. Dr. Tiago A. Almeida}
+ 
+\vfill
+\date{\footnotesize}
+
+%Rodapé com número de slide
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+  \hspace*{\fill}%
+  \insertframenumber\,/\,\inserttotalframenumber}
+ 
+%===== cor do rodapé=========
+\definecolor{azulEscuro}{RGB}{50,50,255}
+\setbeamercolor*{palette quaternary}{fg=white,bg=azulEscuro!30!black} %cor do rodapé %muda outras cores do template
+%============================
+ 
+\abovecaptionskip 0.01 \abovecaptionskip %espaço antes caption
+\belowcaptionskip 0 \belowcaptionskip %espaço depois caption
+
+\newcommand{\up}[1]{\raisebox{1.5ex}[0pt]{#1}}
+
+\usepackage{multirow}%tabelas
+\usepackage{rotating} %rotacionar texto na tabela
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{itemize subitem}{$\blacktriangleright$}
+\setbeamertemplate{itemize subsubitem}{$\bullet$} %\diamond
+%\setbeamertemplate{itemize item}[square] %altera o símbolo que inicia 
+\setbeamertemplate{itemize subitem}[triangle] %altera o símbolo que inicia um subitem em uma lista
+%\setbeamertemplate{itemize subsubitem}[circle] %altera o símbolo que inicia um subsubitem em uma lista
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ \graphicspath{%
+ 	{figs/}%
+ }
+
+
+
+\begin{document}
+
+%=============================================
+\begin{frame}
+	\begin{center}
+
+	\vspace{0.3in}
+
+	\LARGE \textbf{Crop field detection using graph-based image segmentation and contrastive learning}
+
+	\vspace{0.2in}
+
+	{\Large \textbf{Eduardo Garcia do Nascimento}}
+
+	\vspace{0.2in}
+	{\normalsize \textbf{Advisor: Prof. Dr. Tiago A. Almeida}}
+
+	\vspace{0.2in}
+	{\small{ Graduate Program in Computer Science\\  [-0.1in]Federal University of São Carlos -- UFSCar, Sorocaba}}
+
+	{\normalsize April / 2022}
+
+	\vfill
+	\vfill
+
+	\end{center}
+\end{frame}
+%=============================================
+
+%=============================================
+%\begin{frame}{Summary}
+%	
+%	\begin{itemize}
+%		\item Precision Agriculture
+%		\item Boundary Detection of Crop Fields
+%		\item Problem
+%		\item Contrastive Learning
+%		\item Hypotheses
+%		\item Implementation Proposal
+%		\item Work Timeline
+%	\end{itemize}
+%	
+%\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{ \normalsize What is Precision Agriculture?}
+
+	\begin{figure}[htb]
+		\centering
+		\includegraphics[height=6cm]{figs/precisionag.jpg}
+		\label{fig:precisionAgriculture}
+	\end{figure}
+	
+	~\flushright \tiny {Images extracted from John Deere website. Available at: \url{https://www.deere.com/}. Access on \today}
+	
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{ \normalsize Remote Sensing in Precision Agriculture}
+		
+	\begin{columns}
+		\column{0.6\textwidth}
+		    \begin{tcolorbox}[colback=yellow!5,colframe=yellow!75!black]
+		    A \textit{crop field} is the smallest observation unit designed by a farm based on the topography and mechanization plan. 
+	        \end{tcolorbox}
+	        
+    		\begin{figure}[htb]
+    			\centering
+    			\includegraphics[height=3.5cm]{figs/fieldanalyzer.png}
+    			\label{fig:textFieldAnalyzer}
+    		\end{figure}
+
+        \column{0.4\textwidth}
+
+    		\begin{figure}[htb]
+    			\centering
+    			\includegraphics[height=3cm]{figs/gps.png}
+    			\label{fig:gps}
+    		\end{figure}
+    		
+    		\begin{figure}[htb]
+    			\centering
+    			\includegraphics[height=3cm]{figs/display.png}
+    			\label{fig:display}
+    		\end{figure}
+
+	\end{columns}
+	~\flushright \tiny {Images extracted from John Deere website. Available at: \url{https://www.deere.com/}. Access on \today})
+	
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Boundary detection of crop fields}
+	
+	\begin{columns}
+	\column{0.5\textwidth}
+
+		\begin{figure}[htb]
+			\centering
+			\includegraphics[height=4cm]{figs/field_nodetection.png}
+			\label{fig:fieldNoDetection}
+		\end{figure}
+		\pause
+
+	\column{0.5\textwidth}
+		\begin{columns}
+		\column{0.2\textwidth}
+		
+		\huge {$\Rightarrow$ }
+		
+		\column{0.8\textwidth}	
+			\begin{figure}[htb]
+				\centering
+				\includegraphics[height=4cm]{figs/field_detected.png}
+				\label{fig:fieldDetected}
+			\end{figure}
+		\end{columns}
+	\end{columns}
+	
+	~\flushright \tiny \cite{waldner2021}
+	
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Problem}
+	
+	\begin{tcolorbox}[colback=red!5,colframe=red!75!black]
+		Manually drawing field boundaries is a time-consuming and error-prone task.
+	\end{tcolorbox}
+	
+	\begin{tcolorbox}[colback=red!5,colframe=red!75!black]
+		The state-of-the-art automatic methods use deep learning to detect field boundaries but they need a significant number of labeled samples to work appropriately.
+	\end{tcolorbox}
+	
+	\begin{tcolorbox}[colback=red!5,colframe=red!75!black]
+		This requirement makes the application of deep learning restricted to limited areas of the globe. 
+	\end{tcolorbox}
+		
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Contrastive Learning}
+	
+	\begin{columns}
+		\column{0.6\textwidth}
+
+		\begin{figure}[htb]
+      			\includegraphics[height=5cm]{figs/contrastive_learning.png}
+      			\label{fig:simCLR}
+		\end{figure}
+		~\flushright \tiny \cite{chen2020}
+	
+		\column{0.4\textwidth}
+  
+		\pause
+ 
+		Steps: \\
+		\begin{itemize}
+			\item Data augmentation
+			\item Encoding
+			\item Loss minimization
+		\end{itemize}
+	    
+		\bigskip
+	
+	\end{columns}
+
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Contrastive Loss}
+	
+	\centering
+	
+	\begin{equation}
+	L_{(i,j)}=-\log{\frac{\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_j/\tau\right)}}{\sum_{k=1}^{2N}\mathbf{1}_{i\neq k}\cdot\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_k/\tau\right)}}}
+	\end{equation}
+	~\flushright \tiny \cite{chen2020})
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Hypotheses}
+
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!75!black]
+		As contrastive learning based methods require much fewer labeled samples than state-of-the-art deep learning models, its employment to detect field boundaries can lead to competitive results with minimal accuracy loss, demanding just a few labeled samples.
+	\end{tcolorbox}
+		
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}\frametitle{Implementation Proposal} 
+	
+	\begin{itemize}
+		
+		\item Labeling
+		\begin{itemize}
+			\item Labeled data from boundaries manually drawn by John Deere customers.
+			\item Alternatively, operation data can be used to estimate boundaries.
+		\end{itemize}
+        
+        \item Remote sensing
+		\begin{itemize}
+			\item Landsat \& Sentinel I and II images.
+			\item Other sources to be evaluated during the research.
+		\end{itemize}
+		
+		\item Model
+		\begin{itemize}
+			\item Train model using few samples of high-quality labeled data.
+			\item Graph-based segmentation.
+		\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Implementation Proposal}
+	
+	\centering
+	
+\tikzstyle{block} = [draw, rectangle, 
+    minimum height=3em, minimum width=6em, fill=orange, fill opacity=0.2, text opacity=1]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=4cm]
+    % We start by placing the blocks
+    
+    \node [block] (data) {1. Data Processing};
+    \node [block, right of=data] (training) {2. Model Training};
+    \node [block, right of=training] (segmentation) {3. Segmentation};
+    % We draw an edge between the controller and system block to 
+    % calculate the coordinate u. We need it to place the measurement block. 
+    \draw [->](data) -- (training);
+    \draw [->](training) -- (segmentation);
+\end{tikzpicture}
+\end{frame}
+%=============================================
+
+%=============================================
+%\begin{frame}\frametitle{Implementation Proposal} 
+%
+%	\begin{figure}[htb]
+%		\centering
+%		\includegraphics[height=7cm]{Exame de Qualificação/figs/onepage.png}
+%		\label{fig:Implementation}
+%	\end{figure}
+%	~\flushright \tiny~ {Source: the author}
+%\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}\frametitle{Implementation Proposal} 
+
+	\begin{figure}[htb]
+		\centering
+		\includegraphics[width=12cm]{Exame de Qualificação/figs/1.png}
+		\label{fig:data}
+	\end{figure}
+	~\flushright \tiny~ {Source: the author}
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}\frametitle{Implementation Proposal} 
+
+	\begin{figure}[htb]
+		\centering
+		\includegraphics[width=12cm]{Exame de Qualificação/figs/2.png}
+		\label{fig:model}
+	\end{figure}
+	~\flushright \tiny~ {Source: the author}
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}\frametitle{Implementation Proposal} 
+
+	\begin{figure}[htb]
+		\centering
+		\includegraphics[width=12cm]{Exame de Qualificação/figs/3.png}
+		\label{fig:segmentation}
+	\end{figure}
+	~\flushright \tiny~ {Source: the author}
+\end{frame}
+%=============================================
+
+
+%=============================================
+%\begin{frame}{SimCLR}
+%	
+%	\begin{columns}
+%		\column{0.5\textwidth}
+%   		\begin{figure}[htb]
+%          			\includegraphics[height=4cm]{Exame de Qualificação/figs/simclr_chart.png}
+%          			\label{fig:SimCLRChart}
+%    		\end{figure}
+%    		~\flushright \tiny \cite{chen2020}
+%	
+%		\column{0.5\textwidth}
+%    		\begin{figure}[htb]
+%          			%\includegraphics[height=4cm]{figs/simclr_table.png}
+%          			\label{fig:SimCLRTable}
+%    		\end{figure}
+%    		~\flushright \tiny \cite{chen2020}
+%	
+%	\end{columns}
+%	
+%
+%\end{frame}
+%=============================================
+
+%%=============================================
+%\begin{frame}\frametitle{Downstream task} 
+%
+%	\begin{figure}[htb]
+%		\centering
+%		\includegraphics[height=4cm]{figs/semantic_segmentation.png}
+%		\label{fig:SemanticSegmentation}
+%	\end{figure}
+%	~\flushright \tiny \cite{rieder2019}
+%	
+%\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Method Validation}
+
+	\begin{itemize}
+		\item The validation will follow the metrics~\cite{sokolova2009} employed by related state-of-the-art work~\cite{waldner2021}.
+	\end{itemize}		
+
+	\begin{itemize}
+	    \item Thematic accuracy
+		\begin{itemize}
+			\item Pixel or Region-based accuracies.
+			\item Overall, user's and producer's accuracy.
+			\item Matthew's correlation coefficient (MCC).
+		\end{itemize}
+		
+		\item Geometric accuracy
+		\begin{itemize}
+			\item Boundary similarity.
+			\item Location similarity.
+			\item Over and Under segmentation rates.
+		\end{itemize}
+	\end{itemize}
+		
+\end{frame}
+%=============================================
+
+%=============================================
+
+\begin{frame}[fragile]
+\frametitle{Timeline}
+
+\begin{center}
+	\begin{tiny}
+    \begin{longtable}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+   & \multicolumn{4}{c|}{First year} & \multicolumn{4}{c|}{Second year} \\
+    \cline{2-9}
+    \up{Tasks} &1\textordmasculine T&2\textordmasculine T&3\textordmasculine T&4\textordmasculine T
+	&1\textordmasculine T&2\textordmasculine T&3\textordmasculine T&4\textordmasculine T\\
+    \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Bibliographical \\review\\{ } \end{tabular}}&\cellcolor[gray]{.1}&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}\\
+    \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Extraction of remote sensing\\images and\\manually drawn boundaries \end{tabular}}&&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&&&\\   
+    \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Study of SimCLR\\ and similar\\ contrastive learning techniques\end{tabular}}&&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&&&\\ 
+    \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Modeling, build \\e planning of\\required adaptations\end{tabular}}&&&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&&\\
+        \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Execution of the model\\and evaluation \\of first results\end{tabular}}&&&&&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&\\
+        \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Further experiments based on\\the evaluation of\\the first results\end{tabular}}&&&&&&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\\
+        \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Writing the dissertation and \\sharing the results\\{ } \end{tabular}}&&&&&&&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}\\
+    \hline
+
+    \end{longtable}
+	\end{tiny}
+\end{center}
+\end{frame}
+%=============================================
+	
+%=============================================
+\begin{frame}[allowframebreaks]{References}
+\tiny
+\bibliographystyle{sbc}
+%\bibliographystyle{IEEEtranSN_portugues}
+\bibliography{bibFiles/references.bib}
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{}
+	\centering
+	\Huge Questions?
+		
+\end{frame}
+%=============================================
+
+\end{document}
