@@ -1,0 +1,15 @@
+pandas
+requests_oauthlib
+folium
+shapely
+tqdm
+rasterio
+matplotlib
+h3
+scikit-image
+geojson
+pyarrow
+tensorflow
+tensorflow_datasets
+tensorflow_io
+glob2
