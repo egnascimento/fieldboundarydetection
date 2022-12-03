@@ -31,32 +31,6 @@
 \usepackage[Algoritmo]{algorithm}% http://ctan.org/pkg/algorithms
 \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx %use [noend] para não aparecer escrito "end funtion"
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Configuração do pacote algpseudocode para português
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Declaracoes em Português
-%\algrenewcommand\algorithmicend{\textbf{fim}}
-%\algrenewcommand\algorithmicdo{\textbf{faça}}
-%\algrenewcommand\algorithmicwhile{\textbf{enquanto}}
-%\algrenewcommand\algorithmicfor{\textbf{para}}
-%\algrenewcommand\algorithmicif{\textbf{se}}
-%\algrenewcommand\algorithmicthen{\textbf{então}}
-%\algrenewcommand\algorithmicelse{\textbf{senão}}
-%\algrenewcommand\algorithmicreturn{\textbf{retorna}}
-%\algrenewcommand\algorithmicfunction{\textbf{função}}
-%
-%% Rearranja os finais de cada estrutura
-%\algrenewtext{EndWhile}{\algorithmicend\ \algorithmicwhile}
-%\algrenewtext{EndFor}{\algorithmicend\ \algorithmicfor}
-%\algrenewtext{EndIf}{\algorithmicend\ \algorithmicif}
-%\algrenewtext{EndFunction}{\algorithmicend\ \algorithmicfunction}
-%
-%% O comando For, a seguir, retorna 'para #1 -- #2 até #3 faça'
-%%\algnewcommand\algorithmicto{\textbf{até}}
-%%\algrenewtext{For}[3]%
-%%{\algorithmicfor\ #1 $\gets$ #2 \algorithmicto\ #3 \algorithmicdo}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %#############################################################33
 %Terceiro Caption para longtable
 \usepackage{forloop,longtable}
@@ -105,7 +79,7 @@
 %Fim: Terceiro Caption para longtable
 %############################################################################################
 
-\title[Exame de Qualificação]{Contrastive Learning for Automatic Field Boundary Detection}
+\title[Exame de Qualificação]{Crop field detection using graph-based image segmentation and contrastive learning}
 \author[PPGCCS -- UFSCar]{Marciele de Menezes Bittencourt,Co-Orientador: Dr. Renato Moraes Silva, Orientador: Prof. Dr. Tiago A. Almeida}
  
 \vfill
@@ -140,9 +114,6 @@
  \graphicspath{%
  	{figs/}%
  }
-
-
-
 \begin{document}
 
 %=============================================
@@ -151,11 +122,11 @@
 
 	\vspace{0.3in}
 
-	\LARGE \textbf{Crop field detection using graph-based image segmentation and contrastive learning}
+	\Large \textbf{Crop field detection using graph-based image segmentation and contrastive learning}
 
 	\vspace{0.2in}
 
-	{\Large \textbf{Eduardo Garcia do Nascimento}}
+	{\large \textbf{Eduardo Garcia do Nascimento}}
 
 	\vspace{0.2in}
 	{\normalsize \textbf{Advisor: Prof. Dr. Tiago A. Almeida}}
@@ -163,41 +134,26 @@
 	\vspace{0.2in}
 	{\small{ Graduate Program in Computer Science\\  [-0.1in]Federal University of São Carlos -- UFSCar, Sorocaba}}
 
-	{\normalsize April / 2022}
-
-	\vfill
-	\vfill
+	{\small November / 2022}
 
 	\end{center}
 \end{frame}
 %=============================================
 
 %=============================================
-%\begin{frame}{Summary}
-%	
-%	\begin{itemize}
-%		\item Precision Agriculture
-%		\item Boundary Detection of Crop Fields
-%		\item Problem
-%		\item Contrastive Learning
-%		\item Hypotheses
-%		\item Implementation Proposal
-%		\item Work Timeline
-%	\end{itemize}
-%	
-%\end{frame}
-%=============================================
-
-%=============================================
-\begin{frame}{ \normalsize What is Precision Agriculture?}
-
-	\begin{figure}[htb]
-		\centering
-		\includegraphics[height=6cm]{figs/precisionag.jpg}
-		\label{fig:precisionAgriculture}
-	\end{figure}
+\begin{frame}{\normalsize What is Precision Agriculture?}
+    \centering
+    \begin{tikzpicture}
+        \node[anchor=south west] (image) at (0,0) {
+            \includegraphics[height=6cm]{figs/precisionag.png}
+        };
+        \pause
+        \node[align=center,red] at (image.center) {
+            \begin{tcolorbox}[width=11cm,colback=yellow!5,colframe=yellow!75!black] A farming management concept based on observing, measuring and responding to variability in crops, adopting and optimizing technologies many times developed in other industries.\end{tcolorbox}
+        };
+    \end{tikzpicture}
 	
-	~\flushright \tiny {Images extracted from John Deere website. Available at: \url{https://www.deere.com/}. Access on \today}
+    ~\flushright \tiny {Images extracted from John Deere website. Available at: \url{https://www.deere.com/}. Access on June 11, 2022}
 	
 \end{frame}
 %=============================================
@@ -232,7 +188,7 @@
     		\end{figure}
 
 	\end{columns}
-	~\flushright \tiny {Images extracted from John Deere website. Available at: \url{https://www.deere.com/}. Access on \today})
+	~\flushright \tiny {Images extracted from John Deere website. Available at: \url{https://www.deere.com/}. Access on June 11, 2022})
 	
 \end{frame}
 %=============================================
@@ -267,6 +223,37 @@
 	
 	~\flushright \tiny \cite{waldner2021}
 	
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Related work}
+
+\centering
+	
+\tikzstyle{block} = [draw, rectangle, 
+    minimum height=2em, minimum width=6em, fill=orange, fill opacity=0.2, text opacity=1]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2.05cm]
+    % We start by placing the blocks
+    
+    \node [block] (region) {Region-based}; % Low accuracy
+    \pause
+    \node [block, below right of=region] (edge) {Edge-based}; % Issues close to urban areas
+    \draw [->](region) -- (edge);  
+    \pause
+    \node [block, below right of=edge] (hybrid) {Hybrid (Region + Edge)}; % best results compared to previous approaches but still very sensitive to seasonal changes
+    \draw [->](edge) -- (hybrid);
+    \pause
+    \node [block, below right of=hybrid] (ml) {Machine Learning}; % really good performance 92% accuracy but high variability depending on the area it was applied
+    \draw [->](hybrid) -- (ml);
+    \pause
+    \node [block, below right of=ml] (dl) {Deep Learning}; % CNNs, including U-Net with semantic segmentation and customized improvements however not enough labeled samples 
+    \draw [->](ml) -- (dl);
+ \end{tikzpicture}
+	
+		
 \end{frame}
 %=============================================
 
@@ -324,9 +311,36 @@
 	\centering
 	
 	\begin{equation}
-	L_{(i,j)}=-\log{\frac{\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_j/\tau\right)}}{\sum_{k=1}^{2N}\mathbf{1}_{i\neq k}\cdot\exp{\left(\boldsymbol{z}_i\cdot\boldsymbol{z}_k/\tau\right)}}}
+	\ell_{(i,j)}=-\log{\frac{\exp{\left(sim(\boldsymbol{z}_i,\boldsymbol{z}_j)/\tau\right)}}{\sum_{k=1}^{2N}\mathbf{}_{[k\neq i]}\exp{\left(sim(\boldsymbol{z}_i,\boldsymbol{z}_k)/\tau\right)}}}
 	\end{equation}
 	~\flushright \tiny \cite{chen2020})
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Contrastive Learning - Main methods}
+    
+    \begin{columns}
+        \column{0.5\linewidth}
+            \begin{itemize}
+        		\item SimCLR~\cite{chen2020}
+        		\begin{itemize}
+        		    \item Developed by Google Research
+        		    \item Strong data augmentation
+        		    \item Larger batch size
+        		    \item MLP projection head
+        		\end{itemize}
+        	\end{itemize}
+    	\column{0.5\linewidth}
+    	    \begin{itemize}
+        		\item MoCo~\cite{he2020}
+        		\begin{itemize}
+        		    \item Developed by Facebook AI Research
+        		    \item Moving average encoder
+        		    \item Dynamic dictionary
+        		\end{itemize}
+    	    \end{itemize}
+	\end{columns}
 \end{frame}
 %=============================================
 
@@ -334,7 +348,7 @@
 \begin{frame}{Hypotheses}
 
 	\begin{tcolorbox}[colback=blue!5,colframe=blue!75!black]
-		As contrastive learning based methods require much fewer labeled samples than state-of-the-art deep learning models, its employment to detect field boundaries can lead to competitive results with minimal accuracy loss, demanding just a few labeled samples.
+		As contrastive learning based methods require much fewer labeled samples than state-of-the-art deep learning models, their employment to detect field boundaries can lead to competitive results with minimal accuracy loss, demanding just a few labeled samples.
 	\end{tcolorbox}
 		
 \end{frame}
@@ -353,14 +367,14 @@
         
         \item Remote sensing
 		\begin{itemize}
-			\item Landsat \& Sentinel I and II images.
+			\item Sentinel II satellite images.
 			\item Other sources to be evaluated during the research.
 		\end{itemize}
 		
 		\item Model
 		\begin{itemize}
 			\item Train model using few samples of high-quality labeled data.
-			\item Graph-based segmentation.
+			\item Graph-based segmentation~\cite{felzenszwalb2004}.
 		\end{itemize}
 	\end{itemize}
 	
@@ -391,19 +405,7 @@
 %=============================================
 
 %=============================================
-%\begin{frame}\frametitle{Implementation Proposal} 
-%
-%	\begin{figure}[htb]
-%		\centering
-%		\includegraphics[height=7cm]{Exame de Qualificação/figs/onepage.png}
-%		\label{fig:Implementation}
-%	\end{figure}
-%	~\flushright \tiny~ {Source: the author}
-%\end{frame}
-%=============================================
-
-%=============================================
-\begin{frame}\frametitle{Implementation Proposal} 
+\begin{frame}\frametitle{Implementation Proposal - Data Processing} 
 
 	\begin{figure}[htb]
 		\centering
@@ -415,7 +417,7 @@
 %=============================================
 
 %=============================================
-\begin{frame}\frametitle{Implementation Proposal} 
+\begin{frame}\frametitle{Implementation Proposal - Model Training} 
 
 	\begin{figure}[htb]
 		\centering
@@ -427,7 +429,7 @@
 %=============================================
 
 %=============================================
-\begin{frame}\frametitle{Implementation Proposal} 
+\begin{frame}\frametitle{Implementation Proposal - Segmentation} 
 
 	\begin{figure}[htb]
 		\centering
@@ -438,46 +440,56 @@
 \end{frame}
 %=============================================
 
-
 %=============================================
-%\begin{frame}{SimCLR}
-%	
-%	\begin{columns}
-%		\column{0.5\textwidth}
-%   		\begin{figure}[htb]
-%          			\includegraphics[height=4cm]{Exame de Qualificação/figs/simclr_chart.png}
-%          			\label{fig:SimCLRChart}
-%    		\end{figure}
-%    		~\flushright \tiny \cite{chen2020}
-%	
-%		\column{0.5\textwidth}
-%    		\begin{figure}[htb]
-%          			%\includegraphics[height=4cm]{figs/simclr_table.png}
-%          			\label{fig:SimCLRTable}
-%    		\end{figure}
-%    		~\flushright \tiny \cite{chen2020}
-%	
-%	\end{columns}
-%	
-%
-%\end{frame}
-%=============================================
-
-%%=============================================
-%\begin{frame}\frametitle{Downstream task} 
-%
-%	\begin{figure}[htb]
-%		\centering
-%		\includegraphics[height=4cm]{figs/semantic_segmentation.png}
-%		\label{fig:SemanticSegmentation}
-%	\end{figure}
-%	~\flushright \tiny \cite{rieder2019}
-%	
-%\end{frame}
+\begin{frame}{Materials and methods - SimCLR}
+    
+    \begin{columns}
+        \column{0.5\linewidth}
+        \centering
+            \begin{tcolorbox}[width=6cm,colback=yellow!5,colframe=yellow!75!black]
+            SimCLR will be employed since it outperforms other contrastive learning methods in accuracy as well as it makes an efficient use of memory and CPU resources.
+            \end{tcolorbox}
+        \column{.5\linewidth}
+            \centering
+            \includegraphics[width=5cm]{figs/simclr_chart_original.png}
+            \tiny~\cite{chen2020}
+    \end{columns}
+\end{frame}
 %=============================================
 
 %=============================================
-\begin{frame}{Method Validation}
+\begin{frame}{Materials and methods - H3}
+    \begin{columns}[t]
+        \column{.5\textwidth}
+            \centering
+            \includegraphics[width=3cm]{Exame de Qualificação/figs/h3-globe.png}
+            \\\tiny~Division of the globe in hexagons
+            \\~\\
+            \includegraphics[width=3cm]{Exame de Qualificação/figs/h3-distances.png}
+            \\\tiny~Distance from a hexagon to its neighbors
+        \column{.5\textwidth}
+            \centering
+            \includegraphics[width=3cm]{Exame de Qualificação/figs/h3-parent-child.png}
+            \\\tiny~Hierarchical subdivision in smaller hexes
+            \\~\\
+            \includegraphics[width=3cm]{Exame de Qualificação/figs/h3-table.png}
+            \\\tiny~Level 12 average edge length
+    \end{columns}
+    ~\flushright \tiny {Images extracted from H3 Geo website. Available at: \url{https://h3geo.org/}. Access on June 11, 2022}
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Materials and methods - In-Field H3 L12}
+    \centering
+    \includegraphics[width=6cm]{Exame de Qualificação/figs/h3-field.png}
+    \\\tiny~Hexes covering an inferred crop field
+    ~\flushright \tiny {Source: The author}
+\end{frame}
+%=============================================
+
+%=============================================
+\begin{frame}{Materials and methods - Validation}
 
 	\begin{itemize}
 		\item The validation will follow the metrics~\cite{sokolova2009} employed by related state-of-the-art work~\cite{waldner2021}.
@@ -516,13 +528,13 @@
     \up{Tasks} &1\textordmasculine T&2\textordmasculine T&3\textordmasculine T&4\textordmasculine T
 	&1\textordmasculine T&2\textordmasculine T&3\textordmasculine T&4\textordmasculine T\\
     \hline
-    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Bibliographical \\review\\{ } \end{tabular}}&\cellcolor[gray]{.1}&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}\\
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Bibliographical \\review\\{ } \end{tabular}}&\cellcolor[gray]{.1}&\cellcolor[gray]{.1}&\cellcolor[gray]{.1}&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}\\
     \hline
-    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Extraction of remote sensing\\images and\\manually drawn boundaries \end{tabular}}&&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&&&\\   
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Extraction of remote sensing\\images and\\manually drawn boundaries \end{tabular}}&&\cellcolor[gray]{.1}&\cellcolor[gray]{.1}&\cellcolor[gray]{.4}&&&&\\   
     \hline
-    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Study of SimCLR\\ and similar\\ contrastive learning techniques\end{tabular}}&&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&&&\\ 
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Study of SimCLR\\ and similar\\ contrastive learning techniques\end{tabular}}&&\cellcolor[gray]{.1}&\cellcolor[gray]{.1}&\cellcolor[gray]{.4}&&&&\\ 
     \hline
-    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Modeling, build \\e planning of\\required adaptations\end{tabular}}&&&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&&\\
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Modeling, build \\and planning of\\required adaptations\end{tabular}}&&&\cellcolor[gray]{.1}&\cellcolor[gray]{.4}&\cellcolor[gray]{.8}&&&\\
         \hline
     \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}c@{}}Execution of the model\\and evaluation \\of first results\end{tabular}}&&&&&\cellcolor[gray]{.8}&\cellcolor[gray]{.8}&&\\
         \hline
@@ -532,6 +544,8 @@
     \hline
 
     \end{longtable}
+    ~\flushright \tiny Timeline with the executed activities (black), in
+development (dark grey) and planned (light grey)
 	\end{tiny}
 \end{center}
 \end{frame}
