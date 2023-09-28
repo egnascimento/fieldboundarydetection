@@ -1,0 +1,214 @@
+<html>
+<head>
+
+<script>
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc";
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 2; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  var cols = document.getElementById('myTable').rows[1].cells.length;
+  var displayLine = 0;
+  
+  strs = filter.split('|');
+  
+  for (row = 2; row < tr.length; row++) {
+    for (s = 0; s < strs.length; s++) {
+      for (c = 0; c < cols; c++) {
+        td = tr[row].getElementsByTagName("td")[c];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          console.log(strs[s]);
+          if (txtValue.toUpperCase().indexOf(strs[s]) > -1) {
+            displayLine = displayLine + 1;
+          } else {
+            displayLine = displayLine;
+          }
+        }
+      }
+    }
+    if(displayLine >= (strs.length)) {
+        tr[row].style.display = "";
+      }
+      else {
+        tr[row].style.display = "none";
+      }
+      displayLine = 0;
+  }
+}
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 240px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header{
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+#myTable tr:hover {
+  background-color: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<h2>Search</h2>
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<table border=1 id="myTable">
+<tr class="header">
+<th colspan=6>Parameters</th>
+<th colspan=6>Curated Dataset</th><th colspan=4>Full Dataset</th></tr>
+<tr class="header">
+<th href="javascript:void(0)" onclick="sortTable(0)"><div class="tooltip">Description<span class="tooltiptext">Test description</span></div></th>
+<th href="javascript:void(0)" onclick="sortTable(1)"><div class="tooltip">width<span class="tooltiptext">Width of encoded vector</span></div></th>
+<th href="javascript:void(0)" onclick="sortTable(2)"><div class="tooltip">margin<span class="tooltiptext">Margin of Triplet Siamese Network</span></div></th>
+<th href="javascript:void(0)" onclick="sortTable(3)"><div class="tooltip">loss function<span class="tooltiptext">Distance used in the loss function calculation</span></div></th>
+<th href="javascript:void(0)" onclick="sortTable(4)"><div class="tooltip">sampling method<span class="tooltiptext">How hexes are stacked to create the bidimensional matrix sample</span></div></th>
+<th href="javascript:void(0)" onclick="sortTable(5)"><div class="tooltip">bands<span class="tooltiptext">Sentinel-2 bands used in the experimentshu</span></div></th>
+<th><div class="tooltip">Sim Before Encoding<span class="tooltiptext">Avg Similarities of vectors before encoding</span></div></th>
+<th><div class="tooltip">Finetuning Accuracies<span class="tooltiptext">Results of finetuning classification (ACC = accuracy<br>F1W = F1 weighted<br>F1N = F1 negatives<br>F1P = F1 positives<br>MCC = Matthew's correlation coefficient</span></div></th>
+<th>Train Similarities</th><th>Test Sims</th><th>Test Sims Matrix</th><th>Segmentation</th><th>Test Sims</th><th>Test Sims Matrix</th><th>Threshold</th><th>Segmentation</th></tr>
+<tr>
+<td>1. First approach with increased margin</td><td>30</td><td>50</td><td>euclidean</td><td>shuffle</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.01<br>NN 0.04<br>PN -0.01</td><td>ACC 95.03% <br>F1W 94.80<br>F1N 83.82<br>F1P 97.06<br>MCC 0.82</td><td>POS-ANC 0.94<br>NEG-ANC 0.40<br>POS-NEG 0.33<br>POS-POS 0.96<br>ANC-ANC 0.93<br>NEG-NEG 0.95</td><td>PP 0.94<br>NN 0.91<br>PN 0.41</td><td><img width=250 src="cleands_testmatrix_16c11504.png" /></td><td><img width=250 src="cleands_segmentation_16c11504.png" /></td><td>PP 0.14<br>NN 0.22<br>PN -0.07</td><td><img width=250 src="testmatrix_16c11504.png" /></td><td> 0.9375</td><td><img width=250 src="segmentation_16c11504.png" /></td></tr>
+<tr>
+<td>2. Changed loss function distance</td><td>30</td><td>50</td><td>cosine</td><td>shuffle</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.01<br>NN 0.04<br>PN -0.01</td><td>ACC 94.69% <br>F1W 94.59<br>F1N 83.74<br>F1P 96.83<br>MCC 0.81</td><td>POS-ANC 0.96<br>NEG-ANC 0.16<br>POS-NEG 0.19<br>POS-POS 0.96<br>ANC-ANC 0.97<br>NEG-NEG 0.93</td><td>PP 0.94<br>NN 0.91<br>PN 0.15</td><td><img width=250 src="cleands_testmatrix_6a899785.png" /></td><td><img width=250 src="cleands_segmentation_6a899785.png" /></td><td>PP 0.16<br>NN 0.26<br>PN -0.07</td><td><img width=250 src="testmatrix_6a899785.png" /></td><td> 0.9767</td><td><img width=250 src="segmentation_6a899785.png" /></td></tr>
+<tr>
+<td>3. Decreased margin to original</td><td>30</td><td>0.5</td><td>cosine</td><td>shuffle</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.01<br>NN 0.04<br>PN -0.01</td><td>ACC 95.25% <br>F1W 95.06<br>F1N 84.67<br>F1P 97.19<br>MCC 0.83</td><td>POS-ANC 0.92<br>NEG-ANC 0.42<br>POS-NEG 0.32<br>POS-POS 0.94<br>ANC-ANC 0.92<br>NEG-NEG 0.98</td><td>PP 0.92<br>NN 0.96<br>PN 0.30</td><td><img width=250 src="cleands_testmatrix_04a08efb.png" /></td><td><img width=250 src="cleands_segmentation_04a08efb.png" /></td><td>PP 0.12<br>NN 0.19<br>PN -0.05</td><td><img width=250 src="testmatrix_04a08efb.png" /></td><td> 0.9357</td><td><img width=250 src="segmentation_04a08efb.png" /></td></tr>
+<tr>
+<td>4. Changed loss distance back</td><td>30</td><td>0.5</td><td>euclidean</td><td>shuffle</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.01<br>NN 0.04<br>PN -0.01</td><td>ACC 94.24% <br>F1W 93.88<br>F1N 80.61<br>F1P 96.62<br>MCC 0.79</td><td>POS-ANC 0.93<br>NEG-ANC 0.47<br>POS-NEG 0.42<br>POS-POS 0.93<br>ANC-ANC 0.94<br>NEG-NEG 0.96</td><td>PP 0.95<br>NN 0.93<br>PN 0.46</td><td><img width=250 src="cleands_testmatrix_66e3ac3f.png" /></td><td><img width=250 src="cleands_segmentation_66e3ac3f.png" /></td><td>PP 0.16<br>NN 0.23<br>PN -0.02</td><td><img width=250 src="testmatrix_66e3ac3f.png" /></td><td> 0.9441</td><td><img width=250 src="segmentation_66e3ac3f.png" /></td></tr>
+<tr>
+<td>5. No random sample</td><td>30</td><td>0.5</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.34<br>NN 0.14<br>PN -0.05</td><td>ACC 100.00% <br>F1W 100.00<br>F1N 100.00<br>F1P 100.00<br>MCC 1.00</td><td>POS-ANC 0.97<br>NEG-ANC 0.30<br>POS-NEG 0.23<br>POS-POS 0.99<br>ANC-ANC 0.98<br>NEG-NEG 0.96</td><td>PP 0.98<br>NN 0.84<br>PN 0.52</td><td><img width=250 src="cleands_testmatrix_c0de438a.png" /></td><td><img width=250 src="cleands_segmentation_c0de438a.png" /></td><td>PP 0.93<br>NN 0.76<br>PN 0.56</td><td><img width=250 src="testmatrix_c0de438a.png" /></td><td> 0.9937</td><td><img width=250 src="segmentation_c0de438a.png" /></td></tr>
+<tr>
+<td>6. Repeat test</td><td>30</td><td>0.5</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.34<br>NN 0.14<br>PN -0.05</td><td>ACC 99.89% <br>F1W 99.89<br>F1N 99.67<br>F1P 99.93<br>MCC 1.00</td><td>POS-ANC 0.96<br>NEG-ANC 0.39<br>POS-NEG 0.41<br>POS-POS 0.97<br>ANC-ANC 0.98<br>NEG-NEG 0.96</td><td>PP 0.98<br>NN 0.84<br>PN 0.64</td><td><img width=250 src="cleands_testmatrix_c14180d7.png" /></td><td><img width=250 src="cleands_segmentation_c14180d7.png" /></td><td>PP 0.93<br>NN 0.76<br>PN 0.56</td><td><img width=250 src="testmatrix_c14180d7.png" /></td><td> 0.9840</td><td><img width=250 src="segmentation_c14180d7.png" /></td></tr>
+<tr>
+<td>7. Increased margin</td><td>30</td><td>50</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.34<br>NN 0.14<br>PN -0.05</td><td>ACC 99.77% <br>F1W 99.77<br>F1N 99.33<br>F1P 99.86<br>MCC 0.99</td><td>POS-ANC 0.96<br>NEG-ANC 0.45<br>POS-NEG 0.39<br>POS-POS 0.98<br>ANC-ANC 0.97<br>NEG-NEG 0.94</td><td>PP 0.97<br>NN 0.89<br>PN 0.62</td><td><img width=250 src="cleands_testmatrix_0fbc09f0.png" /></td><td><img width=250 src="cleands_segmentation_0fbc09f0.png" /></td><td >PP 0.93<br>NN 0.76<br>PN 0.56</td><td><img width=250 src="testmatrix_0fbc09f0.png" /></td><td> 0.9850</td><td><img width=250 src="segmentation_0fbc09f0.png" /></td></tr>
+<tr>
+<td>8. Sampling back to random</td><td>30</td><td>50</td><td>cosine</td><td>shuffle</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.01<br>NN 0.04<br>PN -0.01</td><td>ACC 93.90% <br>F1W 93.62<br>F1N 80.15<br>F1P 96.40<br>MCC 0.77</td><td>POS-ANC 0.93<br>NEG-ANC 0.28<br>POS-NEG 0.28<br>POS-POS 0.93<br>ANC-ANC 0.94<br>NEG-NEG 0.95</td><td>PP 0.93<br>NN 0.92<br>PN 0.24</td><td><img width=250 src="cleands_testmatrix_bec0496b.png" /></td><td><img width=250 src="cleands_segmentation_bec0496b.png" /></td><td >PP 0.12<br>NN 0.16<br>PN -0.04</td><td><img width=250 src="testmatrix_bec0496b.png" /></td><td> 0.9530</td><td><img width=250 src="segmentation_bec0496b.png" /></td></tr>
+<tr>
+<td>9. Increase width and changed sampling</td><td>40</td><td>50</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.34<br>NN 0.14<br>PN -0.05</td><td>ACC 99.89% <br>F1W 99.89<br>F1N 99.67<br>F1P 99.93<br>MCC 1.00</td><td>POS-ANC 0.98<br>NEG-ANC 0.45<br>POS-NEG 0.34<br>POS-POS 0.99<br>ANC-ANC 0.99<br>NEG-NEG 0.96</td><td>PP 0.99<br>NN 0.88<br>PN 0.55</td><td><img width=250 src="cleands_testmatrix_10117f6b.png" /></td><td><img width=250 src="cleands_segmentation_10117f6b.png" /></td><td >PP 0.93<br>NN 0.76<br>PN 0.56</td><td><img width=250 src="testmatrix_10117f6b.png" /></td><td> 0.9934</td><td><img width=250 src="segmentation_10117f6b.png" /></td></tr>
+<tr>
+<td>10. Changed sampling</td><td>40</td><td>50</td><td>cosine</td><td>shuffle</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.01<br>NN 0.04<br>PN -0.01</td><td>ACC 95.14% <br>F1W 94.96<br>F1N 84.48<br>F1P 97.12<br>MCC 0.82</td><td>POS-ANC 0.93<br>NEG-ANC 0.23<br>POS-NEG 0.25<br>POS-POS 0.91<br>ANC-ANC 0.95<br>NEG-NEG 0.97</td><td>PP 0.95<br>NN 0.93<br>PN 0.20</td><td><img width=250 src="cleands_testmatrix_fa16dbf0.png" /></td><td><img width=250 src="cleands_segmentation_fa16dbf0.png" /></td><td >PP 0.18<br>NN 0.16<br>PN -0.07</td><td><img width=250 src="testmatrix_fa16dbf0.png" /></td><td> 0.9757</td><td><img width=250 src="segmentation_fa16dbf0.png" /></td></tr>
+<tr>
+<td>11. Decreased width and using only RGB</td><td>30</td><td>50</td><td>cosine</td><td>shuffle</td><td>['B02', 'B03', 'B04']</td><td>PP 0.01<br>NN 0.02<br>PN -0.01</td><td>ACC 93.22% <br>F1W 92.60<br>F1N 75.81<br>F1P 96.06<br>MCC 0.74</td><td>POS-ANC 0.97<br>NEG-ANC 0.60<br>POS-NEG 0.55<br>POS-POS 0.98<br>ANC-ANC 0.97<br>NEG-NEG 0.92</td><td>PP 0.92<br>NN 0.87<br>PN 0.71</td><td><img width=250 src="cleands_testmatrix_5d8f510e.png" /></td><td><img width=250 src="cleands_segmentation_5d8f510e.png" /></td><td >PP 0.24<br>NN 0.25<br>PN -0.15</td><td><img width=250 src="testmatrix_5d8f510e.png" /></td><td> 0.9463</td><td><img width=250 src="segmentation_5d8f510e.png" /></td></tr>
+<tr>
+<td>Changing both sampling methods and loss distance</td><td>30</td><td>50</td><td>euclidean</td><td>season</td><td>['B02', 'B03', 'B04']</td><td>PP 0.17<br>NN 0.11<br>PN -0.02</td><td>ACC 99.66% <br>F1W 99.66<br>F1N 99.00<br>F1P 99.80<br>MCC 0.99</td><td>POS-ANC 0.93<br>NEG-ANC 0.68<br>POS-NEG 0.47<br>POS-POS 0.98<br>ANC-ANC 0.97<br>NEG-NEG 0.97</td><td>PP 0.96<br>NN 0.90<br>PN 0.53</td><td><img width=250 src="cleands_testmatrix_488801f1.png" /></td><td><img width=250 src="cleands_segmentation_488801f1.png" /></td><td>PP 0.90<br>NN 0.74<br>PN 0.36</td><td><img width=250 src="testmatrix_488801f1.png" /></td><td> 0.9811</td><td><img width=250 src="segmentation_488801f1.png" /></td></tr>
+<tr>
+<td>Bringing all sentinel-2 bands back</td><td>30</td><td>50</td><td>euclidean</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']</td><td>PP 0.34<br>NN 0.14<br>PN -0.05</td><td>ACC 99.66% <br>F1W 99.66<br>F1N 99.00<br>F1P 99.80<br>MCC 0.99</td><td>POS-ANC 0.95<br>NEG-ANC 0.52<br>POS-NEG 0.41<br>POS-POS 0.98<br>ANC-ANC 0.97<br>NEG-NEG 0.93</td><td>PP 0.98<br>NN 0.81<br>PN 0.65</td><td><img width=250 src="cleands_testmatrix_99360e07.png" /></td><td><img width=250 src="cleands_segmentation_99360e07.png" /></td><td>PP 0.93<br>NN 0.76<br>PN 0.56</td><td><img width=250 src="testmatrix_99360e07.png" /></td><td> 0.9921</td><td><img width=250 src="segmentation_99360e07.png" /></td></tr>
+<tr>
+<td>Bringing all sentinel-2 bands back</td><td>10</td><td>50</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11']</td><td>PP 0.35<br>NN 0.15<br>PN -0.06</td><td>ACC 99.44% <br>F1W 99.43<br>F1N 98.32<br>F1P 99.66<br>MCC 0.98</td><td>POS-ANC 1.00<br>NEG-ANC 0.91<br>POS-NEG 0.89<br>POS-POS 1.00<br>ANC-ANC 1.00<br>NEG-NEG 0.99</td><td>PP 1.00<br>NN 0.98<br>PN 0.95</td><td><img width=250 src="cleands_testmatrix_af52cbb7.png" /></td><td><img width=250 src="cleands_segmentation_af52cbb7.png" /></td><td>PP 0.94<br>NN 0.76<br>PN 0.56</td><td><img width=250 src="testmatrix_af52cbb7.png" /></td><td> 0.9997</td><td><img width=250 src="segmentation_af52cbb7.png" /></td></tr>
+<tr>
+<td>Bringing all sentinel-2 bands back</td><td>10</td><td>50</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11']</td><td>PP 0.35<br>NN 0.15<br>PN -0.06</td><td>ACC 99.89% <br>F1W 99.89<br>F1N 99.67<br>F1P 99.93<br>MCC 1.00</td><td>POS-ANC 0.95<br>NEG-ANC 0.18<br>POS-NEG 0.22<br>POS-POS 0.96<br>ANC-ANC 0.97<br>NEG-NEG 0.96</td><td>PP 0.97<br>NN 0.97<br>PN 0.16</td><td><img width=250 src="cleands_testmatrix_f41bc76f.png" /></td><td><img width=250 src="cleands_segmentation_f41bc76f.png" /></td><td>PP 0.90<br>NN 0.44<br>PN 0.17</td><td><img width=250 src="testmatrix_f41bc76f.png" /></td><td> 0.9214</td><td><img width=250 src="segmentation_f41bc76f.png" /></td></tr>
+<tr>
+<td>Bringing all sentinel-2 bands back</td><td>10</td><td>50</td><td>cosine</td><td>season</td><td>['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B8A', 'B09', 'B11']</td><td>PP 0.35<br>NN 0.15<br>PN -0.06</td><td>ACC 99.44% <br>F1W 99.43<br>F1N 98.32<br>F1P 99.66<br>MCC 0.98</td><td>POS-ANC 0.99<br>NEG-ANC 0.51<br>POS-NEG 0.50<br>POS-POS 0.98<br>ANC-ANC 0.99<br>NEG-NEG 0.92</td><td>PP 0.98<br>NN 1.00<br>PN 0.49</td><td><img width=250 src="cleands_testmatrix_8683aac2.png" /></td><td><img width=250 src="cleands_segmentation_8683aac2.png" /></td><td>PP 0.74<br>NN 0.68<br>PN 0.20</td><td><img width=250 src="testmatrix_8683aac2.png" /></td><td> 0.9427</td><td><img width=250 src="segmentation_8683aac2.png" /></td></tr>

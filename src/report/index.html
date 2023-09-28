@@ -1,0 +1,51 @@
+<html><head><script>     function sortTable(n) {       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;       table = document.getElementById("myTable");       switching = true;       dir = "asc";       while (switching) {         switching = false;         rows = table.rows;         for (i = 1; i < (rows.length - 1); i++) {           shouldSwitch = false;           x = rows[i].getElementsByTagName("TD")[n];           y = rows[i + 1].getElementsByTagName("TD")[n];           if (dir == "asc") {             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {               shouldSwitch = true;               break;             }     } else if (dir == "desc") {     if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {     shouldSwitch = true;               break;             }           }         }         if (shouldSwitch) {           rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);           switching = true;           switchcount ++;         } else {           if (switchcount == 0 && dir == "asc") {             dir = "desc";             switching = true;           }         }       }     }     function myFunction() {       var input, filter, table, tr, td, i, txtValue;       input = document.getElementById("myInput");       filter = input.value.toUpperCase();       table = document.getElementById("myTable");       tr = table.getElementsByTagName("tr");       var cols = document.getElementById("myTable").rows[1].cells.length;      var displayLine = 0;       strs = filter.split("|");       for (row = 1; row < tr.length; row++) {         for (s = 0; s < strs.length; s++) {           for (c = 0; c < cols; c++) {             td = tr[row].getElementsByTagName("td")[c];             if (td) {               txtValue = td.textContent || td.innerText;               console.log(strs[s]);               if (txtValue.toUpperCase().indexOf(strs[s]) > -1) {                 displayLine = displayLine + 1;               } else {                 displayLine = displayLine;               }             }           }         }         if(displayLine >= (strs.length)) {             tr[row].style.display = "";           }           else {             tr[row].style.display = "none";           }           displayLine = 0;       }     }    function zoom(e){
+      var zoomer = e.currentTarget;
+      e.offsetX ? offsetX = e.offsetX : offsetX = e.touches[0].pageX
+      e.offsetY ? offsetY = e.offsetY : offsetX = e.touches[0].pageX
+      x = offsetX/zoomer.offsetWidth*100
+      y = offsetY/zoomer.offsetHeight*100
+      zoomer.style.backgroundPosition = x + "% " + y + "%";
+    }
+    </script><meta name="viewport" content="width=device-width, initial-scale=1"><style>    * {      box-sizing: border-box;    }    .tooltip {      position: relative;      display: inline-block;      border-bottom: 1px dotted black;    }    .tooltip .tooltiptext {      visibility: hidden;      width: 240px;      background-color: black;      color: #fff;      text-align: center;      border-radius: 6px;      padding: 5px 0;      position: absolute;      z-index: 1;    }    .tooltip:hover .tooltiptext {      visibility: visible;    }    #myInput {      background-image: url("/css/searchicon.png");      background-position: 10px 10px;      background-repeat: no-repeat;      width: 100%;      font-size: 16px;      padding: 12px 20px 12px 40px;      border: 1px solid #ddd;      margin-bottom: 12px;    }    #myTable {      border-collapse: collapse;      width: 100%;      border: 1px solid #ddd;      font-size: 18px;    }    #myTable th, #myTable td {      text-align: left;      padding: 12px;    }    #myTable tr {      border-bottom: 1px solid #ddd;    }    #myTable tr.header{      background-color: #f1f1f1;      cursor: pointer;    }    #myTable tr:hover {      background-color: #f1f1f1;    }    figure.zoom {      background-position: 50% 50%;      position: relative;      width: 450px;      overflow: hidden;      cursor: zoom-in;    }    figure.zoom img:hover {      opacity: 0;    }    figure.zoom img {      transition: opacity 0.5s;      display: block;      width: 100%;      height: 100%;    }    </style></head><body><h2>Search</h2><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name"><table border=1 id="myTable">
+<tr>
+<th href="javascript:void(0)" onclick="sortTable(0)"><div class="tooltip">Test ID<span class="tooltiptext">Experiment description</span></div></th><th href="javascript:void(0)" onclick="sortTable(1)"><div class="tooltip">Method<span class="tooltiptext">Experiment description</span></div></th><th href="javascript:void(0)" onclick="sortTable(2)"><div class="tooltip">Sampling<span class="tooltiptext">Technique used to create a sample</span></div></th><th href="javascript:void(0)" onclick="sortTable(3)"><div class="tooltip">Avg Accuracy<span class="tooltiptext">Average Accuracy</span></div></th><th href="javascript:void(0)" onclick="sortTable(4)"><div class="tooltip">Avg MCC<span class="tooltiptext">Average Mathews Correlation Coeficient</span></div></th><th href="javascript:void(0)" onclick="sortTable(5)"><div class="tooltip">URL<span class="tooltiptext">Link to cross validation internal results</span></div></th></tr>
+<tr>
+<td>report_PU_MLP_season</td><td>PU Learning</td><td>Season</td><td>92.94%</td><td>0.83</td><td><a href="report_PU_MLP_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_PU_MLP_shuffle</td><td>PU Learning</td><td>Shuffle</td><td>93.88%</td><td>0.84</td><td><a href="report_PU_MLP_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_PU_RF_season</td><td>PU Learning</td><td>Season</td><td>95.28%</td><td>0.87</td><td><a href="report_PU_RF_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_PU_RF_shuffle</td><td>PU Learning</td><td>Shuffle</td><td>92.02%</td><td>0.80</td><td><a href="report_PU_RF_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_PU_SVC_season</td><td>PU Learning</td><td>Season</td><td>94.57%</td><td>0.86</td><td><a href="report_PU_SVC_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_PU_SVC_shuffle</td><td>PU Learning</td><td>Shuffle</td><td>92.93%</td><td>0.83</td><td><a href="report_PU_SVC_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_simclr_15_0.1_season</td><td>SimCLR</td><td>Season</td><td>97.73%</td><td>0.94</td><td><a href="report_simclr_15_0.1_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_simclr_15_0.1_shuffle</td><td>SimCLR</td><td>Shuffle</td><td>97.02%</td><td>0.93</td><td><a href="report_simclr_15_0.1_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_simclr_30_0.1_season</td><td>SimCLR</td><td>Season</td><td>97.70%</td><td>0.93</td><td><a href="report_simclr_30_0.1_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_simclr_30_0.1_shuffle</td><td>SimCLR</td><td>Shuffle</td><td>97.44%</td><td>0.94</td><td><a href="report_simclr_30_0.1_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_simclr_40_0.1_season</td><td>SimCLR</td><td>Season</td><td>98.14%</td><td>0.95</td><td><a href="report_simclr_40_0.1_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_simclr_40_0.1_shuffle</td><td>SimCLR</td><td>Shuffle</td><td>97.04%</td><td>0.93</td><td><a href="report_simclr_40_0.1_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_15_10_cosine_season</td><td>Triplet Siamese</td><td>Season</td><td>93.78%</td><td>0.84</td><td><a href="report_tls_15_10_cosine_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_15_10_cosine_shuffle</td><td>Triplet Siamese</td><td>Shuffle</td><td>94.81%</td><td>0.86</td><td><a href="report_tls_15_10_cosine_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_30_10_cosine_season</td><td>Triplet Siamese</td><td>Season</td><td>93.95%</td><td>0.84</td><td><a href="report_tls_30_10_cosine_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_30_10_cosine_shuffle</td><td>Triplet Siamese</td><td>Shuffle</td><td>94.78%</td><td>0.85</td><td><a href="report_tls_30_10_cosine_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_30_10_euclidean_season</td><td>Triplet Siamese</td><td>Season</td><td>94.35%</td><td>0.85</td><td><a href="report_tls_30_10_euclidean_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_40_10_cosine_season</td><td>Triplet Siamese</td><td>Season</td><td>94.90%</td><td>0.86</td><td><a href="report_tls_40_10_cosine_season/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_40_10_cosine_shuffle</td><td>Triplet Siamese</td><td>Shuffle</td><td>95.23%</td><td>0.87</td><td><a href="report_tls_40_10_cosine_shuffle/report.html">Results</a></td></tr>
+<tr>
+<td>report_tls_40_10_euclidean_season</td><td>Triplet Siamese</td><td>Season</td><td>94.12%</td><td>0.85</td><td><a href="report_tls_40_10_euclidean_season/report.html">Results</a></td></tr>
