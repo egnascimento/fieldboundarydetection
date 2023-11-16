@@ -1,0 +1,107 @@
+\documentclass{beamer}
+
+\input{header.tex}
+
+%-------------title here--------------------
+
+
+\title{An explainable model to support the decision about the  therapy protocol for AML}
+\author{\small Jade M. Almeida \textsuperscript{1},
+Giovanna A. Castro \textsuperscript{1}, 
+João A. Machado-Neto \textsuperscript{2} and Tiago A. Almeida \textsuperscript{1}}
+\date{}
+
+\subtitle{
+\vspace{0.25cm}
+\textsuperscript{1}
+Department of Computer Science (DComp-So)\\
+Federal University of São Carlos (UFSCar)\\
+18052-780, Sorocaba, São  Paulo -- Brazil\\
+05508-000, Sao Paulo -- Brazil\\
+\vspace{0.25cm}
+\textsuperscript{2} 
+Institute of Biomedical Sciences\\
+The University of Sao Paulo (USP)\\
+05508-000, Sao  Paulo -- Brazil\\
+}
+
+
+%--------------begin document--------------------
+\begin{document}
+\maketitle
+
+\footlinecolor{maincolor}
+
+
+%--------------AUTORES--------------------
+
+\begin{sidepic}{beamerthemesrc/ufscar/UFSCAR_background_2}{ML Research Group - UFSCar}
+\framesubtitle{The authors of this paper}
+
+\begin{center}
+    
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{beamerthemesrc/authors/profile_authors.png}
+    \caption{\tiny Machine learning research group coordinated by Prof. Dr. Tiago A. Almeida} % <---
+    \label{fig:authors}
+\end{figure}
+\end{center}
+    
+\end{sidepic}
+
+
+\begin{frame}{In Colaboration With}
+\framesubtitle{The authors of this paper}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{beamerthemesrc/authors/profile_joao.png}
+    \caption{Research group on Hematological Neoplasms coordinated by Prof. Dr. João Agostinho Machado Neto} % <---
+    \label{fig:colaboration}
+\end{figure}
+    
+\end{frame}
+
+%-----------------------------------------------
+%          INCLUINDO AS DEMAIS SEÇÕES %-----------------------------------------------
+
+
+\section{Introduction}
+\input{contents/Introduction.tex}
+
+\section{Materials and Methods}
+\input{contents/Methodology}
+
+\section{Results and Discussion}
+\input{contents/Results}
+
+
+\section{Conclusion}
+\input{contents/Conclusion}
+
+\section{Acknowledgements}
+\begin{frame}{Acknowledgements}
+
+
+    \begin{figure}
+            \centering
+            \includegraphics[width=0.4\textwidth]{beamerthemesrc/acknoledgements.png}
+            \vspace{0.3cm}
+            \caption{Supported by CAPES, CNPq, and FAPESP grant \#2021/13325-1.}
+    \end{figure}
+    
+    
+\end{frame}
+
+\section{References}
+\begin{frame}[allowframebreaks]{References}
+    \vspace{0.1cm}
+	\tiny
+	\bibliographystyle{splncs04}
+	\bibliography{references}
+\end{frame}
+
+
+\backmatter[notitle]
+\end{document}
